@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -109,5 +110,15 @@ public class ClienteController {
                 return ResponseEntity.noContent().build();
             })
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/buscar-por-nome")
+    public ResponseEntity<List<ClienteFormRequest>> getByName(@RequestParam String nome){
+        List<Cliente> clientes = repository.buscarPorNome(nome);
+
+        List<ClienteFormRequest> clientesResponse = clientes.stream()
+        .map(ClienteFormRequest::fromModel).collect(Collectors.toList());
+
+        return ResponseEntity.ok(clientesResponse);
     }
 }
